@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-/**
- * ReservationSystem manages the console-based user flow for:
- * - User authentication (login/register)
- * - Searching hotels by location and dates
- * - Selecting rooms and options
- * - Processing payment
- * - Confirming and viewing bookings
- */
+/*
+  ReservationSystem manages the console-based user flow for:
+  - User authentication (login/register)
+  - Searching hotels by location and dates
+  - Selecting rooms and options
+  - Processing payment
+  - Confirming and viewing bookings
+*/
 public class ReservationSystem {
     // List of registered users loaded from data generator
     private List<User> users;
@@ -24,31 +24,30 @@ public class ReservationSystem {
     // Scanner for reading console input
     private Scanner sc = new Scanner(System.in);
 
-    /**
-     * Initializes the reservation system with sample users and hotels.
-     */
+   // Initializes the reservation system with sample users and hotels.
     public ReservationSystem() {
         // Load users and hotels with test data
         users = new ArrayList<>(Arrays.asList(DataGenerator.createUsers()));
         hotels = DataGenerator.createHotels();
     }
 
-    /**
-     * Starts the application: shows welcome message,
-     * handles login/registration, then shows main menu.
-     */
+    //Starts the application: shows welcome message, handles login/registration, then shows main menu.
     public void start() {
-        System.out.println("=== Welcome to Agoda Console ===");
+        System.out.println("=== Welcome to Agoda ===");
         loginOrRegister();
+        while (currentUser == null) {
+        	loginOrRegister();
+        }
         mainMenu();
     }
 
-    /**
-     * Prompts the user to either login, register, or exit.
-     * Loops until a user is authenticated or registers.
+    /*
+      Prompts the user to either login, register, or exit.
+      Loops until a user is authenticated or registers.
      */
     private void loginOrRegister() {
         while (true) {
+	    System.out.println();
             System.out.println("1) Login");
             System.out.println("2) Register");
             System.out.println("3) Exit");
@@ -68,9 +67,9 @@ public class ReservationSystem {
         }
     }
 
-    /**
-     * Attempts to authenticate a user by email and password.
-     * Sets currentUser if successful; otherwise, shows error.
+    /*
+      Attempts to authenticate a user by email and password.
+      Sets currentUser if successful; otherwise, shows error.
      */
     private void login() {
         System.out.print("Email: ");
@@ -86,30 +85,38 @@ public class ReservationSystem {
         System.out.println("Invalid credentials.");
     }
 
-    /**
-     * Registers a new user by collecting name, email, and password,
-     * adds them to the users list, and sets them as currentUser.
-     */
+  //    Registers a new user by collecting name, email, and password, adds them to the users list, and sets them as currentUser.
     private void register() {
         System.out.print("Name: ");
         String name = sc.nextLine();
         System.out.print("Email: ");
         String email = sc.nextLine();
+        
+        Boolean emailExisted = false;
+        
+        for (User user : users) {
+        	if (user.getEmail().equals(email)) {
+        		emailExisted = true;
+        	}
+        }
+        
         System.out.print("Password: ");
         String pwd = sc.nextLine();
-        currentUser = new User(name, email, pwd);
-        users.add(currentUser);
+        
+        if (emailExisted) {
+        	System.out.println("User with this email already existed. Please try again!");
+        	
+        	loginOrRegister();
+        	return;
+        }
+        
+        User newUser = new User(name, email, pwd);
+        users.add(newUser);
         System.out.println("Registration complete.");
     }
 
-    /**
-     * Displays the main menu for the authenticated user:
-     * 1) Search Hotels
-     * 2) View Bookings
-     * 3) Logout or Cancel
-     * Continues until user logs out or exits.
-     */
-    private void mainMenu() {
+    
+    private void mainMenu() { //main menu for authenticated user
         while (true) {
             System.out.println("\n1) Search Hotels");
             System.out.println("2) View Bookings");
@@ -132,10 +139,9 @@ public class ReservationSystem {
             }
         }
     }
-
-    /**
-     * Handles hotel search by destination, dates, and number of guests.
-     * Displays matching hotels, then prompts to select one for booking.
+    /*
+      Handles hotel search by destination, dates, and number of guests.
+      Displays matching hotels, then prompts to select one for booking.
      */
     private void searchHotels() {
         System.out.print("Destination (city) or cancel/exit: ");
@@ -218,11 +224,7 @@ public class ReservationSystem {
      * Displays room options for the given hotel and dates,
      * allows selection of room and additional options,
      * processes payment, and confirms the booking.
-     *
-     * @param h   selected Hotel
-     * @param cin check-in date
-     * @param cout check-out date
-     */
+      */
     private void bookRoom(Hotel h, LocalDate cin, LocalDate cout) {
         Room[] rooms = h.getRooms();
         // List available rooms
@@ -305,10 +307,7 @@ public class ReservationSystem {
             System.exit(0);
         }
     }
-
-    /**
-     * Displays all bookings for the current user, or a message if none exist.
-     */
+    // Displays all bookings for the current user, or a message if none exist.
     private void viewBookings() {
         List<Booking> bk = currentUser.getBookings();
         if (bk.isEmpty()) {
