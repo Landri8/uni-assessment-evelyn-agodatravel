@@ -66,10 +66,13 @@ public class Booking {
     @Override
     public String toString() {
         long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        // add user name & email at the top of the receipt
         return String.format(
-            "%s\nLocation: %s\nRating: ★%.1f\n\n" +
-            "%s\nPrice: %.2fBaht/night %s\nFacilities: %s\nOptions: %s\n\n" +
-            "Stay: %s to %s (%d nights)\nPaid via: %s\nTotal: %.2fBaht",
+            "Guest: %s <%s>%n" +
+            "Hotel Name: %s%nLocation: %s%nRating: %.1f stars ★%n%n" +
+            "%s%nPrice: $%.2f/night %s%nFacilities: %s%nOptions: %s%n%n" +
+            "Stay: %s to %s (%d nights)%nPaid via: %s%nTotal: $%.2f",
+            user.getName(), user.getEmail(),
             hotel.getName(), hotel.getLocation(), hotel.getRating(),
             room.getType(), room.getPricePerNight(),
             room.getDiscountLabel().isEmpty() ? "" : "(" + room.getDiscountLabel() + ")",

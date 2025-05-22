@@ -294,18 +294,15 @@ public class ReservationSystem {
         // Create and store the booking
         Booking b = new Booking(currentUser, h, r, chosen, cin, cout, pay);
         currentUser.addBooking(b);
+        
+        System.out.println("===================================================");
         System.out.println("\n✔ Booking Confirmed:\n" + b + "\n");
         
         // Ask user to make another booking. If no, exit the program
-        System.out.print("Would you like to make another booking? (yes/no): ");
-        String again = sc.nextLine().trim().toLowerCase();
-        if (again.equals("yes") || again.equals("y")) {
-            // go back to main menu
-            mainMenu();
-        } else {
-            System.out.println("Thank you for using Agoda Console! Goodbye.");
-            System.exit(0);
-        }
+        System.out.println("Thanks for booking with Agoda!");
+        System.out.println("===================================================");
+        System.out.println();
+        mainMenu();
     }
     // Displays all bookings for the current user, or a message if none exist.
     private void viewBookings() {
